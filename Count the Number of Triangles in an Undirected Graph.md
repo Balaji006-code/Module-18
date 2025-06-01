@@ -1,112 +1,98 @@
-# Ex. No: 17E - Adjacency List Representation of a Graph
+# Ex. No: 18E - Count the Number of Triangles in an Undirected Graph
 
 ### Name-Balaji K
 ### Reg No-212223060028
 
 ## AIM:
-To write a Python program to demonstrate the **adjacency list representation** of the given graph.
-
----
+To write a Python program to **count the number of triangles** present in an **undirected graph** using matrix operations.
 
 ## ALGORITHM:
 
-**Step 1**: Start the program.
+**Step 1**: Initialize a matrix `aux2` to store the square of the adjacency matrix (i.e., `graph²`).  
+Also, initialize a matrix `aux3` to store the cube of the adjacency matrix (i.e., `graph³`).
 
-**Step 2**: Define a class `AdjNode` to create a node for each adjacent vertex:
-- Store the **vertex number**.
-- Store the **link to the next adjacent node**.
+**Step 2**: Multiply the adjacency matrix with itself to compute `aux2 = graph × graph`.
 
-**Step 3**: Define a class `Graph` to create the graph using adjacency lists:
-- Initialize the **number of vertices**.
-- Create a **list (array)** of size `V`, where each element is initially `None`.
+**Step 3**: Multiply `aux2` with the adjacency matrix again to compute `aux3 = aux2 × graph`.
 
-**Step 4**: Define a method `add_edge(src, dest)` to:
-- Add `dest` to the adjacency list of `src`.
-- Add `src` to the adjacency list of `dest` (for **undirected graphs**).
+**Step 4**: Compute the **trace** of the matrix `aux3` (i.e., the sum of diagonal elements of the matrix).
 
-**Step 5**: Define a method `print_graph()` to:
-- Traverse the adjacency list of each vertex.
-- Print the **vertex** and its **adjacent nodes**.
+**Step 5**: Divide the trace by **6** to get the number of triangles in the graph.  
+*(Each triangle is counted six times in the trace — twice per vertex and once per direction.)*
 
-**Step 6**: In the main program:
-- Create a `Graph` object with `V` vertices.
-- Call `add_edge()` for all desired edges.
-- Call `print_graph()` to display the adjacency list.
-
-**Step 7**: End the program.
-
----
+**Step 6**: Return the result.
 
 ## PYTHON PROGRAM
 
 ```
-"""
-A Python program to demonstrate the adjacency
-list representation of the graph
-"""
+# A Python3 program for finding number of
+# triangles in an Undirected Graph. The
+# program is for adjacency matrix
+# representation of the graph
 
-# A class to represent the adjacency list of the node
+# Utility function for matrix
+# multiplication
+def multiply(A, B, C):
+	global V
+	for i in range(V):
+		for j in range(V):
+			C[i][j] = 0
+			for k in range(V):
+				C[i][j] += A[i][k] * B[k][j]
 
+# Utility function to calculate
+# trace of a matrix (sum of
+# diagonal elements)
+def getTrace(graph):
+	global V
+	trace = 0
+	for i in range(V):
+		trace += graph[i][i]
+	return trace
 
-class AdjNode:
-	def __init__(self, data):
-		self.vertex = data
-		self.next = None
-
-
-# A class to represent a graph. A graph
-# is the list of the adjacency lists.
-# Size of the array will be the no. of the
-# vertices "V"
-class Graph:
-	def __init__(self, vertices):
-		self.V = vertices
-		self.graph = [None] * self.V
-
-	# Function to add an edge in an undirected graph
-	def add_edge(self, src, dest):
-		# Adding the node to the source node
-		node = AdjNode(dest)
-		node.next = self.graph[src]
-		self.graph[src] = node
-
-		# Adding the source node to the destination as
-		# it is the undirected graph
-		node = AdjNode(src)
-		node.next = self.graph[dest]
-		self.graph[dest] = node
-
+# Utility function for calculating
+# number of triangles in graph
+def triangleInGraph(graph):
+	global V
 	
-	def print_graph(self):
-	    for i in range(self.V):
-	        print("Adjacency list of vertex {}\n head".format(i),end=" ")
-	        temp=self.graph[i]
-	        while temp:
-	            print("-> {}".format(temp.vertex),end=" ")
-	            temp=temp.next
-	        print("\n")
+	# To Store graph^2
+	aux2 = [[None] * V for i in range(V)]
 
+	# To Store graph^3
+	aux3 = [[None] * V for i in range(V)]
+	    #-----CODE HERE ----
 
+	# Initialising aux
+	# matrices with 0
+	for i in range(V):
+		for j in range(V):
+			aux2[i][j] = aux3[i][j] = 0
 
-# Driver program to the above graph class
-if __name__ == "__main__":
-	V = 5
-	graph = Graph(V)
-	graph.add_edge(0, 1)
-	graph.add_edge(0, 4)
-	graph.add_edge(1, 2)
-	graph.add_edge(1, 3)
-	graph.add_edge(1, 4)
-	graph.add_edge(2, 3)
-	graph.add_edge(3, 4)
+	# aux2 is graph^2 now printMatrix(aux2)
+	multiply(graph, graph, aux2)
 
-	graph.print_graph()
+	# after this multiplication aux3 is
+	# graph^3 printMatrix(aux3)
+	multiply(graph, aux2, aux3)    
+	trace = getTrace(aux3)
 
+	return trace//6
+
+# Driver Code
+
+# Number of vertices in the graph
+V = int(input())
+graph = [[0, 1, 1, 0],
+		[1, 0, 1, 1],
+		[1, 1, 0, 1],
+		[0, 1, 1, 0]]
+
+print("Total number of Triangle in Graph :",\ntriangleInGraph(graph))
 ```
 
 ## OUTPUT
-![image](https://github.com/user-attachments/assets/6ad6e70e-964b-4783-989b-95eed16c4160)
+![image](https://github.com/user-attachments/assets/9fb019c1-aa9b-4556-a5cf-3a210e86f12f)
 
 
 ## RESULT
-Thus , the Python program for demonstrating the adjacency list representation of the given graph is verified and executed successfully.
+Thus , a Python program to count the number of triangles present in an undirected graph using matrix operations are verified.
