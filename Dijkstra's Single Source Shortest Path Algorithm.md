@@ -1,97 +1,121 @@
-# Ex. No: 17B - BFS Traversal from a Given Source Vertex
+# Ex. No: 18C - Dijkstra's Single Source Shortest Path Algorithm
 
 ### Name-Balaji K
 ### Reg No-212223060028
 
 ## AIM:
-To write a Python program to **print BFS traversal** from a given source vertex.
+To write a Python program for **Dijkstra's single source shortest path algorithm**.
 
 ## ALGORITHM:
 
-**Step 1**: Start the program.
+**Step 1**: Initialize a `distance[]` array with infinity for all vertices except the source, which is set to `0`.  
+Create a `sptSet[]` array (shortest path tree set) to keep track of vertices whose shortest distance from the source is finalized.
 
-**Step 2**: Create a graph using **adjacency list representation**.
+**Step 2**: Pick the vertex `u` with the minimum distance value from the set of vertices not yet processed.
 
-**Step 3**: Add edges between vertices using the `addEdge()` method.
+**Step 3**: For every adjacent vertex `v` of the picked vertex `u`, if the current distance to `v` is greater than the distance to `u` plus the edge weight `(u, v)`, then update the distance of `v`.
 
-**Step 4**: Implement the `BFS()` function:
-- Initialize all vertices as **not visited**.
-- Use a **queue** to track vertices for traversal.
-- Mark the **starting vertex** as visited and enqueue it.
-- Dequeue a vertex, process it, and enqueue all its **adjacent unvisited vertices** while marking them as visited.
+**Step 4**: Mark the vertex `u` as processed in `sptSet`.
 
-**Step 5**: Input the **starting vertex** and perform BFS traversal from it.
+**Step 5**: Repeat Steps 2–4 until all vertices are processed.
 
-**Step 6**: Print the vertices in **BFS order**.
-
-**Step 7**: End the program.
+**Step 6**: Print the shortest distances from the source to all other vertices.
 
 ## PYTHON PROGRAM
 
 ```
+# Python program for Dijkstra's single source shortest path algorithm. 
+# The program is for adjacency matrix representation of the graph
 
-# Python3 Program to print BFS traversal
-# from a given source vertex. BFS(int s)
-# traverses vertices reachable from s.
-from collections import defaultdict
+# Library for INT_MAX
+import sys
 
-# This class represents a directed graph
-# using adjacency list representation
-class Graph:
+class Graph():
 
-	# Constructor
-	def __init__(self):
+	def __init__(self, vertices):
+		self.V = vertices
+		self.graph = [[0 for column in range(vertices)]
+					for row in range(vertices)]
 
-		# default dictionary to store graph
-		self.graph = defaultdict(list)
+	def printSolution(self, dist):
+		print("Vertex   Distance from Source")
+		for node in range(self.V):
+			print(node, "           ", dist[node])
 
-	# function to add an edge to graph
-	def addEdge(self,u,v):
-		self.graph[u].append(v)
+	# A utility function to find the vertex with
+	# minimum distance value, from the set of vertices
+	# not yet included in shortest path tree
+	def minDistance(self, dist, sptSet):
 
-	# Function to print a BFS of graph
-	def BFS(self, s):
+		# Initialize minimum distance for next node
+		min = sys.maxsize
 
-		# Mark all the vertices as not visited
-		visited = [False] * (max(self.graph) + 1)
+		# Search not nearest vertex not in the
+		# shortest path tree
+		for u in range(self.V):
+			if dist[u] < min and sptSet[u] == False:
+				min = dist[u]
+				min_index = u
 
-		# Create a queue for BFS
-		queue = []
+		return min_index
 
-		# Mark the source node as
-		# visited and enqueue it
-		queue.append(s)
-		visited[s] = True
+	# Function that implements Dijkstra's single source
+	# shortest path algorithm for a graph represented
+	# using adjacency matrix representation
+	def dijkstra(self, src):
 
-		while queue:
-		    
-		    s=queue.pop(0)
-		    print(s,end=" ")
-		    
-		    for i in self.graph[s]:
-		        if visited[i]==False:
-		            queue.append(i)
-		            visited[i]=True
-# Create a graph given in
-# the above diagram
-n=int(input())
-g = Graph()
-g.addEdge(0, 1)
-g.addEdge(0, 2)
-g.addEdge(1, 2)
-g.addEdge(2, 0)
-g.addEdge(2, 3)
-g.addEdge(3, 3)
+		dist = [sys.maxsize] * self.V
+		dist[src] = 0
+		sptSet = [False] * self.V
 
-print ("Following is Breadth First Traversal"
-				" (starting from vertex {})".format(n))
-g.BFS(n)
+		for cout in range(self.V):
+		    x=self.minDistance(dist,sptSet)
+		    sptSet[x]=True
+		    for y in range(self.V):
+		        if self.graph[x][y]>0 and sptSet[y]==False and dist[y]>dist[x]+self.graph[x][y]:
+		            dist[y]=dist[x]+self.graph[x][y]
 
+			# Pick the minimum distance vertex from
+			# the set of vertices not yet processed.
+			# x is always equal to src in first iteration
+		
+                # ------ Code Here -----
+
+
+			# Put the minimum distance vertex in the
+			# shortest path tree
+
+                # ------ Code Here -----
+			
+
+			# Update dist value of the adjacent vertices
+			# of the picked vertex only if the current
+			# distance is greater than new distance and
+			# the vertex in not in the shortest path tree
+			
+			# ------ Code Here -----
+
+		self.printSolution(dist)
+
+# Driver program
+g = Graph(9)
+g.graph = [[0, 4, 0, 0, 0, 0, 0, 8, 0],
+		[4, 0, 8, 0, 0, 0, 0, 11, 0],
+		[0, 8, 0, 7, 0, 4, 0, 0, 2],
+		[0, 0, 7, 0, 6, 14, 0, 0, 0],
+		[0, 0, 0, 6, 0, 5, 0, 0, 0],
+		[0, 0, 4, 14, 5, 0, 2, 0, 0],
+		[0, 0, 0, 0, 0, 2, 0, 1, 6],
+		[8, 11, 0, 0, 0, 0, 1, 0, 7],
+		[0, 0, 2, 0, 0, 0, 6, 7, 0]
+		];
+
+g.dijkstra(0);
 ```
 
 ## OUTPUT
-![image](https://github.com/user-attachments/assets/f39b2841-dd78-4a1f-b66f-d1cc821c4e47)
+![image](https://github.com/user-attachments/assets/36e112cc-468a-488c-99dc-6b3c0f0fa9d6)
 
 
 ## RESULT
-Thus, the Python program to print BFS traversal from a given source vertex is verified and executed successfully.
+Thus, a Python program for Dijkstra's single source shortest path algorithm are verified.
